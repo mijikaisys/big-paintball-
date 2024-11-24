@@ -3,7 +3,7 @@ local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 local Camera = workspace.CurrentCamera
 
-local fixateDistance = 4 -- Distance à laquelle la caméra sera positionnée au-dessus du joueur
+local fixateDistance = 2.22 -- Distance à laquelle la caméra sera positionnée au-dessus du joueur
 local fixedPlayer = nil
 
 -- Fonction pour vérifier s'il y a des équipes
