@@ -52,5 +52,5 @@ while true do
         Camera.CameraType = Enum.CameraType.Custom
     end
 
-    wait(0.353) -- Pause de 0,3 secondes avant de choisir un nouveau joueur
+    wait(0.5) -- Pause de 0,3 secondes avant de choisir un nouveau joueur
 end
