@@ -1,9 +1,7 @@
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait() -- Attendre que le personnage soit chargé
-local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart") -- Obtenir la partie racine humanoïde
 
-local searchRadius = 2000 -- Rayon de recherche autour du personnage
+local searchRadius = 2000-- Rayon de recherche autour du personnage
 local actionDistance = 35 -- Distance à laquelle l'action doit être exécutée
 
 -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
@@ -52,6 +50,9 @@ while true do
     local objectDistance = "" -- Variable pour stocker la distance à l'objet trouvé
     local objectColor = "" -- Variable pour stocker la couleur de l'objet trouvé
 
+    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait() -- Attendre que le personnage soit chargé
+    local HumanoidRootPart = character:WaitForChild("HumanoidRootPart") -- Obtenir la partie racine humanoïde
+
     -- Parcourir tous les objets dans le workspace
     for _, object in ipairs(workspace:GetChildren()) do
         -- Vérifier si l'objet est à l'intérieur du rayon de recherche
@@ -95,5 +96,5 @@ while true do
         colorLabel.Text = "Couleur : N/A" -- Remettre la couleur par défaut
     end
 
-    wait(0.09) -- Attendre 0,1 seconde avant de vérifier à nouveau
+    wait(0.05) -- Attendre 0,1 seconde avant de vérifier à nouveau
 end
