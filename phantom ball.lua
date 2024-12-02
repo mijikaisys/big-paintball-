@@ -1,7 +1,12 @@
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local searchRadius = 2000 -- Rayon de recherche autour du personnage
-local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
+local function initializeParry()
+
+    local Players = game:GetService("Players")
+
+    local LocalPlayer = Players.LocalPlayer
+
+    local searchRadius = 2000 -- Rayon de recherche autour du personnage
+
+    local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
 
 -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -102,7 +107,9 @@ end
 
 -- Exécuter la fonction à la création du personnage
 LocalPlayer.CharacterAdded:Connect(function()
-    checkForGameBall() -- Appeler la fonction pour vérifier la GameBall
+            wait()
+            initializeParry()
+            checkForGameBall() -- Appeler la fonction pour vérifier la GameBall
 end)
 
 -- Appeler la fonction initialement si le personnage est déjà présent
