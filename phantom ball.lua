@@ -115,7 +115,7 @@ local function initializeParry()
                 colorLabel.Text = "Couleur : N/A" -- Remettre la couleur par défaut
             end
 
-            wait(0.05) -- Attendre 0,1 seconde avant de vérifier à nouveau
+            wait(0.9) -- Attendre 0,1 seconde avant de vérifier à nouveau
         end
     end
 
