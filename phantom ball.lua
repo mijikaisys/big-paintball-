@@ -1,7 +1,6 @@
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-
-local searchRadius = 2000-- Rayon de recherche autour du personnage
+local searchRadius = 20 -- Rayon de recherche autour du personnage
 local actionDistance = 35 -- Distance à laquelle l'action doit être exécutée
 
 -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
@@ -43,58 +42,70 @@ local function isColorRed(color)
     return (color.R >= redThreshold) and (color.G <= greenThreshold) and (color.B <= greenThreshold)
 end
 
--- Boucle pour vérifier les objets autour du personnage
-while true do
-    local foundObject = false -- Variable pour savoir si un objet a été trouvé
-    local objectPosition = "" -- Variable pour stocker la position de l'objet trouvé
-    local objectDistance = "" -- Variable pour stocker la distance à l'objet trouvé
-    local objectColor = "" -- Variable pour stocker la couleur de l'objet trouvé
-
+-- Fonction pour vérifier les objets autour du personnage
+local function checkForGameBall()
     local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait() -- Attendre que le personnage soit chargé
     local HumanoidRootPart = character:WaitForChild("HumanoidRootPart") -- Obtenir la partie racine humanoïde
 
-    -- Parcourir tous les objets dans le workspace
-    for _, object in ipairs(workspace:GetChildren()) do
-        -- Vérifier si l'objet est à l'intérieur du rayon de recherche
-        if object:IsA("BasePart") and (object.Position - HumanoidRootPart.Position).magnitude <= searchRadius then
-            -- Vérifier si le nom de l'objet est "GameBall"
-            if object.Name:lower() == "gameball" then
-                foundObject = true
-                objectPosition = "GameBall trouvé à : " .. tostring(object.Position) .. "\n"
-                
-                -- Calculer la distance entre le joueur et "GameBall"
-                local distance = (object.Position - HumanoidRootPart.Position).magnitude
-                objectDistance = "Distance : " .. tostring(distance) -- Mettre à jour la distance
-                
-                -- Vérifier la couleur avec tolérance
-                if isColorRed(object.Color) then
-                    objectColor = "Couleur : Rouge"
+    while true do
+        local foundObject = false -- Variable pour savoir si un objet a été trouvé
+        local objectPosition = "" -- Variable pour stocker la position de l'objet trouvé
+        local objectDistance = "" -- Variable pour stocker la distance à l'objet trouvé
+        local objectColor = "" -- Variable pour stocker la couleur de l'objet trouvé
+
+        -- Parcourir tous les objets dans le workspace
+        for _, object in ipairs(workspace:GetChildren()) do
+            -- Vérifier si l'objet est à l'intérieur du rayon de recherche
+            if object:IsA("BasePart") and (object.Position - HumanoidRootPart.Position).magnitude <= searchRadius then
+                -- Vérifier si le nom de l'objet est "GameBall"
+                if object.Name:lower() == "gameball" then
+                    foundObject = true
+                    objectPosition = "GameBall trouvé à : " .. tostring(object.Position) .. "\n"
                     
-                    -- Exécuter l'action si la distance est inférieure ou égale à 35
-                    if distance <= actionDistance then
-                        local args = {
-                            [1] = 2.933813859058389e+76
-                        }
-                        game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
+                    -- Calculer la distance entre le joueur et "GameBall"
+                    local distance = (object.Position - HumanoidRootPart.Position).magnitude
+                    objectDistance = "Distance : " .. tostring(distance) -- Mettre à jour la distance
+                    
+                    -- Vérifier la couleur avec tolérance
+                    if isColorRed(object.Color) then
+                        objectColor = "Couleur : Rouge"
+                        
+                        -- Exécuter l'action si la distance est inférieure ou égale à 35
+                        if distance <= actionDistance then
+                            local args = {
+                                [1] = 2.933813859058389e+76
+                            }
+                            game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
+                        end
+                    else
+                        objectColor = "Couleur : Pas Rouge"
                     end
-                else
-                    objectColor = "Couleur : Pas Rouge"
+                    
+                    break -- Sortir de la boucle une fois que l'objet est trouvé
                 end
-                
-                break -- Sortir de la boucle une fois que l'objet est trouvé
             end
         end
-    end
 
-    if foundObject then
-        positionLabel.Text = objectPosition -- Mettre à jour le texte avec la position trouvée
-        distanceLabel.Text = objectDistance -- Mettre à jour le texte avec la distance trouvée
-        colorLabel.Text = objectColor -- Mettre à jour le texte avec la couleur trouvée
-    else
-        positionLabel.Text = "Aucun objet trouvé" -- Mettre à jour le texte par défaut
-        distanceLabel.Text = "Distance : N/A" -- Remettre la distance par défaut
-        colorLabel.Text = "Couleur : N/A" -- Remettre la couleur par défaut
-    end
+        if foundObject then
+            positionLabel.Text = objectPosition -- Mettre à jour le texte avec la position trouvée
+            distanceLabel.Text = objectDistance -- Mettre à jour le texte avec la distance trouvée
+            colorLabel.Text = objectColor -- Mettre à jour le texte avec la couleur trouvée
+        else
+            positionLabel.Text = "Aucun objet trouvé" -- Mettre à jour le texte par défaut
+            distanceLabel.Text = "Distance : N/A" -- Remettre la distance par défaut
+            colorLabel.Text = "Couleur : N/A" -- Remettre la couleur par défaut
+        end
 
-    wait(0.05) -- Attendre 0,1 seconde avant de vérifier à nouveau
+        wait(0.1) -- Attendre 0,1 seconde avant de vérifier à nouveau
+    end
+end
+
+-- Exécuter la fonction à la création du personnage
+LocalPlayer.CharacterAdded:Connect(function()
+    checkForGameBall() -- Appeler la fonction pour vérifier la GameBall
+end)
+
+-- Appeler la fonction initialement si le personnage est déjà présent
+if LocalPlayer.Character then
+    checkForGameBall()
 end
