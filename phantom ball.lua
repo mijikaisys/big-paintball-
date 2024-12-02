@@ -3,6 +3,8 @@ local LocalPlayer = Players.LocalPlayer
 
 local searchRadius = 2000 -- Rayon de recherche autour du personnage
 local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
+local lastActionTime = 0 -- Variable pour suivre le dernier temps d'action
+local actionCooldown = 0.150 -- Délai entre les actions (150 ms)
 
 -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -71,12 +73,13 @@ local function checkForGameBall()
                     if isColorRed(object.Color) then
                         objectColor = "Couleur : Rouge"
                         
-                        -- Exécuter l'action si la distance est inférieure ou égale à 40
-                        if distance <= actionDistance then
+                        -- Vérifier si suffisamment de temps s'est écoulé depuis la dernière action
+                        if distance <= actionDistance and tick() - lastActionTime >= actionCooldown then
                             local args = {
                                 [1] = 2.933813859058389e+76
                             }
                             game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
+                            lastActionTime = tick() -- Mettre à jour le temps de la dernière action
                         end
                     else
                         objectColor = "Couleur : Pas Rouge"
