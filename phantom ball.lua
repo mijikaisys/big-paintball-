@@ -4,7 +4,7 @@ local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait() -- 
 local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart") -- Obtenir la partie racine humanoïde
 
 local searchRadius = 2000 -- Rayon de recherche autour du personnage
-local actionDistance = 30 -- Distance à laquelle l'action doit être exécutée
+local actionDistance = 35 -- Distance à laquelle l'action doit être exécutée
 
 -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -68,16 +68,16 @@ while true do
                 -- Vérifier la couleur avec tolérance
                 if isColorRed(object.Color) then
                     objectColor = "Couleur : Rouge"
+                    
+                    -- Exécuter l'action si la distance est inférieure ou égale à 35
+                    if distance <= actionDistance then
+                        local args = {
+                            [1] = 2.933813859058389e+76
+                        }
+                        game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
+                    end
                 else
                     objectColor = "Couleur : Pas Rouge"
-                end
-                
-                -- Exécuter l'action si la distance est inférieure ou égale à 30
-                if distance <= actionDistance then
-                    local args = {
-                        [1] = 2.933813859058389e+76
-                    }
-                    game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
                 end
                 
                 break -- Sortir de la boucle une fois que l'objet est trouvé
@@ -95,5 +95,5 @@ while true do
         colorLabel.Text = "Couleur : N/A" -- Remettre la couleur par défaut
     end
 
-    wait(0.1) -- Attendre 0,1 seconde avant de vérifier à nouveau
+    wait(0.09) -- Attendre 0,1 seconde avant de vérifier à nouveau
 end
