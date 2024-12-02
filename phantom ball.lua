@@ -6,7 +6,7 @@ local function initializeParry()
     local searchRadius = 2000 -- Rayon de recherche autour du personnage
     local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
     local lastActionTime = 0 -- Variable pour suivre le dernier temps d'action
-    local actionCooldown = 0.150 -- Délai entre les actions (150 ms)
+    local actionCooldown = 0 -- Délai entre les actions (150 ms)
 
     -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
     local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -84,7 +84,7 @@ local function initializeParry()
                                 lastActionTime = tick() -- Mettre à jour le temps de la dernière action
 
                                 -- Attendre 0.5 sec si la GameBall est encore rouge
-                                wait(0.5)
+                                wait()
                                 -- Vérifier à nouveau si la GameBall est toujours rouge
                                 if isColorRed(object.Color) then
                                     -- Toujours rouge, donc on attend encore 0.5 sec
