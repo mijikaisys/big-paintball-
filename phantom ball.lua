@@ -6,9 +6,9 @@ local function initializeParry()
     local searchRadius = 2000 -- Rayon de recherche autour du personnage
     local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
     local lastActionTime = 0 -- Variable pour suivre le dernier temps d'action
-    local actionCooldown = 0 -- Délai entre les actions (150 ms)
+    local actionCooldown = 0.150 -- Délai entre les actions (150 ms)
     local lastColorChangeTime = 0 -- Variable pour suivre le dernier changement de couleur
-    local colorChangeThreshold = 0.2 -- Seuil de temps pour le changement de couleur (200 ms)
+    local colorChangeThreshold = 0.240 -- Seuil de temps pour le changement de couleur (240 ms)
 
     -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
     local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -45,7 +45,7 @@ local function initializeParry()
         local redThreshold = 0.5 -- Seuil pour le rouge (0 à 1)
         local greenThreshold = 0.3 -- Seuil pour le vert (0 à 1)
         local blueThreshold = 0.3 -- Seuil pour le bleu (0 à 1)
-
+        
         return (color.R >= redThreshold) and (color.G <= greenThreshold) and (color.B <= greenThreshold)
     end
 
@@ -77,7 +77,7 @@ local function initializeParry()
                         if isColorRed(object.Color) then
                             objectColor = "Couleur : Rouge"
 
-                            -- Vérifier si suffisamment de temps s'est écoulé depuis la dernière action
+                            -- Vérifier si l'action peut être exécutée
                             if distance <= actionDistance and tick() - lastActionTime >= actionCooldown then
                                 local args = {
                                     [1] = 2.933813859058389e+76
@@ -85,13 +85,20 @@ local function initializeParry()
                                 game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
                                 lastActionTime = tick() -- Mettre à jour le temps de la dernière action
 
-                                -- Vérifier le temps depuis le dernier changement de couleur
+                                -- Vérifier la rapidité du changement de couleur
                                 if tick() - lastColorChangeTime < colorChangeThreshold then
                                     -- La couleur a changé rapidement, spammer l'action
-                                    while tick() - lastColorChangeTime < colorChangeThreshold do
+                                    while isColorRed(object.Color) and (tick() - lastColorChangeTime < colorChangeThreshold) do
                                         game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
                                         wait(actionCooldown) -- Attendre avant le prochain envoi
                                     end
+                                end
+
+                                -- Attendre 0.5 sec si la GameBall est encore rouge
+                                wait(0.5)
+                                if isColorRed(object.Color) then
+                                    -- Si elle est toujours rouge, attendre encore 0.5 sec
+                                    wait(0.5)
                                 end
 
                                 lastColorChangeTime = tick() -- Mettre à jour le temps du changement de couleur
@@ -115,7 +122,7 @@ local function initializeParry()
                 colorLabel.Text = "Couleur : N/A" -- Remettre la couleur par défaut
             end
 
-            wait(0.9) -- Attendre 0,1 seconde avant de vérifier à nouveau
+            wait(0.1) -- Attendre 0,1 seconde avant de vérifier à nouveau
         end
     end
 
