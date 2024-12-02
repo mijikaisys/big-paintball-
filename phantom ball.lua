@@ -1,7 +1,7 @@
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
-local searchRadius = 20 -- Rayon de recherche autour du personnage
-local actionDistance = 35 -- Distance à laquelle l'action doit être exécutée
+local searchRadius = 2000 -- Rayon de recherche autour du personnage
+local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
 
 -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
