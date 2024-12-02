@@ -1,8 +1,8 @@
-local function initializeParry()
-    local Players = game:GetService("Players")
-    local LocalPlayer = Players.LocalPlayer
-    local searchRadius = 2000 -- Rayon de recherche autour du personnage
-    local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+local searchRadius = 2000 -- Rayon de recherche autour du personnage
+local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
 
 -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -71,7 +71,7 @@ local function checkForGameBall()
                     if isColorRed(object.Color) then
                         objectColor = "Couleur : Rouge"
                         
-                        -- Exécuter l'action si la distance est inférieure ou égale à 35
+                        -- Exécuter l'action si la distance est inférieure ou égale à 40
                         if distance <= actionDistance then
                             local args = {
                                 [1] = 2.933813859058389e+76
@@ -101,14 +101,21 @@ local function checkForGameBall()
     end
 end
 
+-- Fonction pour initialiser le parry (ajoutez votre logique ici)
+local function initializeParry()
+    -- Ajoutez ici la logique pour initialiser le parry, si nécessaire
+    print("Parry initialized")
+end
+
 -- Exécuter la fonction à la création du personnage
 LocalPlayer.CharacterAdded:Connect(function()
-            wait()
-            initializeParry()
-            checkForGameBall() -- Appeler la fonction pour vérifier la GameBall
+    wait() -- Attendre que le personnage soit entièrement chargé
+    initializeParry() -- Initialiser le parry
+    checkForGameBall() -- Appeler la fonction pour vérifier la GameBall
 end)
 
 -- Appeler la fonction initialement si le personnage est déjà présent
 if LocalPlayer.Character then
-    checkForGameBall()
+    initializeParry() -- Initialiser le parry
+    checkForGameBall() -- Appeler la fonction pour vérifier la GameBall
 end
