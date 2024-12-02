@@ -6,7 +6,7 @@ local function initializeParry()
     local searchRadius = 2000 -- Rayon de recherche autour du personnage
     local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
     local lastActionTime = 0 -- Variable pour suivre le dernier temps d'action
-    local actionCooldown = 0.150 -- Délai entre les actions (150 ms)
+    local actionCooldown = 0 -- Délai entre les actions (150 ms)
     local lastColorChangeTime = 0 -- Variable pour suivre le dernier changement de couleur
     local colorChangeThreshold = 0.240 -- Seuil de temps pour le changement de couleur (240 ms)
 
