@@ -4,7 +4,7 @@ local LocalPlayer = Players.LocalPlayer
 local searchRadius = 2000 -- Rayon de recherche autour du personnage
 local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
 local lastActionTime = 0 -- Variable pour suivre le dernier temps d'action
-local actionCooldown = 0.180 -- Délai entre les actions (150 ms)
+local actionCooldown = 0.202 -- Délai entre les actions (150 ms)
 
 -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
 local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
