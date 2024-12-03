@@ -95,7 +95,7 @@ local function initializeParry()
                                 end
 
                                 -- Attendre 0.5 sec si la GameBall est encore rouge
-                                wait(0.5)
+                                wait()
                                 if isColorRed(object.Color) then
                                     -- Si elle est toujours rouge, attendre encore 0.5 sec
                                     wait(0.5)
