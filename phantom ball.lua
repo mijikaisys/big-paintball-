@@ -6,10 +6,11 @@ local function initializeParry()
     local searchRadius = 2000 -- Rayon de recherche autour du personnage
     local actionDistance = 40 -- Distance à laquelle l'action doit être exécutée
     local lastActionTime = 0 -- Variable pour suivre le dernier temps d'action
-    local actionCooldown = 0 -- Délai entre les actions (150 ms)
+    local actionCooldown = 0.150 -- Délai entre les actions (150 ms)
     local lastColorChangeTime = 0 -- Variable pour suivre le dernier changement de couleur
     local colorChangeThreshold = 0.240 -- Seuil de temps pour le changement de couleur (240 ms)
-    local spamDuration = 0.252 -- Durée pendant laquelle le spam est actif (252 ms)
+    local spamDuration = 0.350 -- Durée pendant laquelle le spam est actif (252 ms)
+    local spamCooldown = 0.150 -- Délai entre les envois lors du spam (500 ms, ajustez comme nécessaire)
 
     -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance, la couleur et l'état du spam
     local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -102,13 +103,13 @@ local function initializeParry()
                                     local spamStartTime = tick() -- Commencer le chronomètre pour le spam
                                     while isColorRed(object.Color and (tick() - spamStartTime < spamDuration)) do
                                         game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
-                                        wait(actionCooldown) -- Attendre avant le prochain envoi
+                                        wait(spamCooldown) -- Attendre avant le prochain envoi (ajusté)
                                     end
                                     spamStatusLabel.Text = "Spam Inactif" -- Indiquer que le spam n'est plus actif
                                 end
 
                                 -- Attendre 0.5 sec si la GameBall est encore rouge
-                                
+                                wait()
                                 if isColorRed(object.Color) then
                                     -- Si elle est toujours rouge, attendre encore 0.5 sec
                                     wait(0.5)
@@ -153,3 +154,4 @@ local function initializeParry()
 end
 
 -- Appel initial pour démarrer le script
+initializeParry()
