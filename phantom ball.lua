@@ -10,7 +10,7 @@ local function initializeParry()
     local lastColorChangeTime = 0 -- Variable pour suivre le dernier changement de couleur
     local colorChangeThreshold = 0.240 -- Seuil de temps pour le changement de couleur (240 ms)
 
-    -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance et la couleur
+    -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance, la couleur et l'état du spam
     local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
 
     -- TextLabel pour afficher la position
@@ -39,6 +39,15 @@ local function initializeParry()
     colorLabel.TextColor3 = Color3.new(1, 1, 1) -- Couleur du texte blanc
     colorLabel.TextScaled = true -- Mise à l'échelle du texte
     colorLabel.Text = "Couleur : N/A" -- Texte par défaut
+
+    -- TextLabel pour indiquer l'état du spam
+    local spamStatusLabel = Instance.new("TextLabel", screenGui)
+    spamStatusLabel.Size = UDim2.new(0, 300, 0, 50) -- Taille du label
+    spamStatusLabel.Position = UDim2.new(1, -310, 0, 190) -- Position juste en dessous du troisième label
+    spamStatusLabel.BackgroundTransparency = 0.5 -- Transparence du fond
+    spamStatusLabel.TextColor3 = Color3.new(1, 1, 1) -- Couleur du texte blanc
+    spamStatusLabel.TextScaled = true -- Mise à l'échelle du texte
+    spamStatusLabel.Text = "Spam Inactif" -- Texte par défaut
 
     -- Fonction pour vérifier si la couleur est dans la plage de rouge
     local function isColorRed(color)
@@ -85,13 +94,15 @@ local function initializeParry()
                                 game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
                                 lastActionTime = tick() -- Mettre à jour le temps de la dernière action
 
-                                -- Vérifier la rapidité du changement de couleur
+                                -- Vérifier si la GameBall est toujours rouge après l'action
                                 if tick() - lastColorChangeTime < colorChangeThreshold then
                                     -- La couleur a changé rapidement, spammer l'action
+                                    spamStatusLabel.Text = "Spam Actif" -- Indiquer que le spam est actif
                                     while isColorRed(object.Color) and (tick() - lastColorChangeTime < colorChangeThreshold) do
                                         game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
                                         wait(actionCooldown) -- Attendre avant le prochain envoi
                                     end
+                                    spamStatusLabel.Text = "Spam Inactif" -- Indiquer que le spam n'est plus actif
                                 end
 
                                 -- Attendre 0.5 sec si la GameBall est encore rouge
