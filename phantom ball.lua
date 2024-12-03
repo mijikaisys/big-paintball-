@@ -41,15 +41,43 @@ local function initializeParry()
     colorLabel.TextColor3 = Color3.new(1, 1, 1) -- Couleur du texte blanc
     colorLabel.TextScaled = true -- Mise à l'échelle du texte
     colorLabel.Text = "Couleur : N/A" -- Texte par défaut
+    local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui")
+local button = Instance.new("TextButton")
 
-    -- TextLabel pour indiquer l'état du spam
-    local spamStatusLabel = Instance.new("TextLabel", screenGui)
-    spamStatusLabel.Size = UDim2.new(0, 300, 0, 50) -- Taille du label
-    spamStatusLabel.Position = UDim2.new(1, -310, 0, 190) -- Position juste en dessous du troisième label
-    spamStatusLabel.BackgroundTransparency = 0.5 -- Transparence du fond
-    spamStatusLabel.TextColor3 = Color3.new(1, 1, 1) -- Couleur du texte blanc
-    spamStatusLabel.TextScaled = true -- Mise à l'échelle du texte
-    spamStatusLabel.Text = "Spam Inactif" -- Texte par défaut
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+-- Modifier la taille et la position du bouton
+button.Size = UDim2.new(0, 100, 0, 50) -- Taille réduite
+button.Position = UDim2.new(1, -110, 0, 10) -- Positionné en haut à droite
+button.Text = "Spam Inactif"
+button.Parent = screenGui
+
+local spamActive = false
+local spamConnection
+
+local function toggleSpam()
+    spamActive = not spamActive
+    
+    if spamActive then
+        button.Text = "Spam Actif"
+        spamConnection = game:GetService("RunService").Heartbeat:Connect(function()
+            local args = {
+                [1] = 2.933813859058389e+76
+            }
+            game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
+        end)
+    else
+        button.Text = "Spam Inactif"
+        if spamConnection then
+            spamConnection:Disconnect()
+            spamConnection = nil
+        end
+    end
+end
+
+button.MouseButton1Click:Connect(toggleSpam)
+end
 
     -- Fonction pour vérifier si la couleur est dans la plage de rouge
     local function isColorRed(color)
@@ -99,14 +127,10 @@ local function initializeParry()
                                 -- Vérifier si la GameBall est toujours rouge après l'action
                                 if tick() - lastColorChangeTime < colorChangeThreshold then
                                     -- La couleur a changé rapidement, spammer l'action
-                                    spamStatusLabel.Text = "Spam Actif" -- Indiquer que le spam est actif
                                     local spamStartTime = tick() -- Commencer le chronomètre pour le spam
                                     while isColorRed(object.Color and (tick() - spamStartTime < spamDuration)) do
                                         game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
-                                        wait(spamCooldown) -- Attendre avant le prochain envoi (ajusté)
                                     end
-                                    spamStatusLabel.Text = "Spam Inactif" -- Indiquer que le spam n'est plus actif
-                                end
 
                                 -- Attendre 0.5 sec si la GameBall est encore rouge
                                 wait()
