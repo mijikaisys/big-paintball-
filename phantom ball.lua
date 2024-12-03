@@ -9,6 +9,7 @@ local function initializeParry()
     local actionCooldown = 0 -- Délai entre les actions (150 ms)
     local lastColorChangeTime = 0 -- Variable pour suivre le dernier changement de couleur
     local colorChangeThreshold = 0.240 -- Seuil de temps pour le changement de couleur (240 ms)
+    local spamDuration = 0.252 -- Durée pendant laquelle le spam est actif (252 ms)
 
     -- Créer un ScreenGui et des TextLabels pour afficher la position, la distance, la couleur et l'état du spam
     local screenGui = Instance.new("ScreenGui", LocalPlayer:WaitForChild("PlayerGui"))
@@ -98,7 +99,8 @@ local function initializeParry()
                                 if tick() - lastColorChangeTime < colorChangeThreshold then
                                     -- La couleur a changé rapidement, spammer l'action
                                     spamStatusLabel.Text = "Spam Actif" -- Indiquer que le spam est actif
-                                    while isColorRed(object.Color) and (tick() - lastColorChangeTime < colorChangeThreshold) do
+                                    local spamStartTime = tick() -- Commencer le chronomètre pour le spam
+                                    while isColorRed(object.Color and (tick() - spamStartTime < spamDuration)) do
                                         game:GetService("ReplicatedStorage").TS.GeneratedNetworkRemotes:FindFirstChild("RE_4.6848415795802784e+76"):FireServer(unpack(args))
                                         wait(actionCooldown) -- Attendre avant le prochain envoi
                                     end
@@ -106,7 +108,7 @@ local function initializeParry()
                                 end
 
                                 -- Attendre 0.5 sec si la GameBall est encore rouge
-                                wait()
+                                
                                 if isColorRed(object.Color) then
                                     -- Si elle est toujours rouge, attendre encore 0.5 sec
                                     wait(0.5)
@@ -139,7 +141,7 @@ local function initializeParry()
 
     -- Exécuter la fonction à la création du personnage
     LocalPlayer.CharacterAdded:Connect(function()
-        wait() -- Attendre que le personnage soit entièrement chargé
+        wait(5) -- Attendre que le personnage soit entièrement chargé
         initializeParry() -- Initialiser le parry
         checkForGameBall() -- Appeler la fonction pour vérifier la GameBall
     end)
@@ -151,4 +153,3 @@ local function initializeParry()
 end
 
 -- Appel initial pour démarrer le script
-initializeParry()
